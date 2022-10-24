@@ -20,23 +20,26 @@ import Select from '@mui/material/Select';
 
 export default function Create() {
     const [loading, setLoading] = useState(false);
+
     const [mess, setMess] = useState({
         status: '',
         mess: '',
     });
+
     const [form, setForm] = useState({
-        original_title: '',
-        original_language: '',
-        genre: '',
         backdrop_path: '',
         detail_image: '',
+        original_language: '',
+        original_title: '',
         overview: '',
         release_date: '',
+        genre: '',
         popularity: '',
         markIMDB: '',
-        video: '',
+        videoLink: '',
         trailer: '',
     });
+
     const [genres, setGenres] = useState([])
 
     const navigate = useNavigate();
@@ -45,23 +48,23 @@ export default function Create() {
         e.preventDefault();
         setLoading(true);
         let data= {
-            original_title: form.original_title,
-            original_language: form.original_language,
-            genre: form.genre,
             backdrop_path: form.backdrop_path,
             detail_image: form.detail_image,
+            original_language: form.original_language,
+            original_title: form.original_title,
             overview: form.overview,
             release_date: form.release_date,
+            genre: form.genre,
             popularity: form.popularity,
             markIMDB: form.markIMDB,
-            video: form.video,
+            videoLink: form.videoLink,
             trailer: form.trailer,
         }
 
 
         await axios.post('http://localhost:8000/api/movie', data)
             .then(res => {
-
+                console.log(res.data)
                 setLoading(false);
                 setMess({
                     status: 'success',
@@ -70,25 +73,7 @@ export default function Create() {
                 setTimeout(() => navigate('/home'), 1000);
             })
             .catch(err => {
-                setForm({
-                    original_title: '',
-                    original_language: '',
-                    genre: '',
-                    backdrop_path: '',
-                    detail_image: '',
-                    overview: '',
-                    release_date: '',
-                    popularity: '',
-                    markIMDB: '',
-                    video: '',
-                    trailer: '',
-                });
-                setLoading(false);
-                setMess({
-                    status: 'success',
-                    mess: 'Tạo mới thành công! Về trang chủ...',
-                });
-                setTimeout(() => navigate('/home'), 1000);
+                console.log(err.message);
 
             });
     }
@@ -107,7 +92,7 @@ export default function Create() {
     }
 
     useEffect(() => {
-       getGenre().then(res => setGenres(res.data.genres))
+        getGenre().then(res => setGenres(res.data.genres)).catch(err => console.log(err.message))
     },[])
     console.log(form)
 
@@ -126,7 +111,7 @@ export default function Create() {
                         {mess && mess.status === 'navigate' ? <Alert severity='info'>{mess.mess}</Alert> : ''}
                         <Box component='form' sx={{
                             '& .MuiTextField-root': {m: 1, width: '25ch'},
-                        }}  >
+                        }} onSubmit={handleSubmit} >
                             <h2 style={{textAlign: 'center'}}>Create a new movie</h2>
                             <div style={{textAlign: 'center'}}>
                                 <TextField
@@ -153,11 +138,14 @@ export default function Create() {
                                     fullWidth sx={{m: 1}}
                                     item xs={5}
                                 >
-                                    <InputLabel name='overview'  onChange={handleChange} htmlFor="outlined-adornment-amount">Overview</InputLabel>
+                                    <InputLabel
+                                        htmlFor="outlined-adornment-amount">Overview</InputLabel>
                                     <OutlinedInput
                                         id="outlined-adornment-amount"
                                         startAdornment={<InputAdornment position="start"></InputAdornment>}
                                         label="Amount"
+                                        name='overview'
+                                        onChange={handleChange}
                                     />
                                 </FormControl>
                             </div>
@@ -191,11 +179,14 @@ export default function Create() {
                                     id="demo-simple-select"
                                     label="Genre"
                                     name= "genre"
+                                    onChange={(e) => {
+                                        setForm({...form, [e.target.name]: e.target.value })
+                                    }}
                                 >
                                     {genres.map(genre =>
 
-                                    <MenuItem key= {genre._id} value={genre._id}>{genre.name}</MenuItem>
-                                        )}
+                                        <MenuItem key= {genre._id} value={genre._id}>{genre.name}</MenuItem>
+                                    )}
                                 </Select>
                             </FormControl>
 
@@ -244,7 +235,6 @@ export default function Create() {
                             <div style={{textAlign: 'center'}}>
                                 <Button variant='contained' color='success'
                                         sx={{marginTop: 5, alignItems: 'center'}} type='submit'
-                                        onClick={handleSubmit}
                                 >
                                     Submit
                                 </Button>

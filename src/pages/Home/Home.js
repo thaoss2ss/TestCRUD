@@ -93,13 +93,13 @@ const Home = () => {
         }
     };
 
-    const handleEdit = name => {
+    const handleEdit = (id) => {
         setMess({
             status: 'navigate',
             mess: 'Đang chuyển hướng sang trang chỉnh sửa...',
         });
 
-        setTimeout(() => navigate('/edit', { state: name }), 1000);
+        setTimeout(() => navigate('/edit', { state: id }), 1000);
     };
 
     const handleCreate = () => {
@@ -141,7 +141,7 @@ const Home = () => {
                         {mess && mess.status === 'error' ? <Alert severity='error'>{mess.mess}</Alert> : ''}
                         {mess && mess.status === 'navigate' ? <Alert severity='info'>{mess.mess}</Alert> : ''}
                         {mess && mess.status === 'success' ? <Alert severity='success'>{mess.mess}</Alert> : ''}
-                        <h3>List Products</h3>
+                        <h3>List Movies</h3>
                         <Button variant='outlined' color='success' onClick={handleCreate}>
                             Create
                         </Button>

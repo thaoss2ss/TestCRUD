@@ -22,7 +22,7 @@ export default function Edit() {
         mess: '',
     });
     const [form, setForm] = useState({
-        original_title: '',
+        original_title:'',
         original_language: '',
         genre: '',
         backdrop_path: '',
@@ -40,18 +40,14 @@ export default function Edit() {
     const handleSubmit = async e => {
         e.preventDefault();
         setLoading(true);
-        let headersList = {
-            'Content-Type': 'application/json',
 
-        };
 
-        let bodyContent = JSON.stringify(form);
+
 
         let reqOptions = {
             url: `http://localhost:8000/api/movie/:id`,
             method: 'PUT',
-            headers: headersList,
-            data: bodyContent,
+
         };
 
         await axios
@@ -103,7 +99,7 @@ export default function Edit() {
             console.log(res);
             setLoading(false);
             setForm({
-                original_title: '',
+                original_title:'',
                 original_language: '',
                 genre: '',
                 backdrop_path: '',
@@ -217,14 +213,12 @@ export default function Edit() {
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Genre</InputLabel>
                                 <Select
-
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     label="Genre"
                                     name= "genre"
                                 >
                                     {genres.map(genre =>
-
                                         <MenuItem key= {genre._id} value={genre._id}>{genre.name}</MenuItem>
                                     )}
                                 </Select>
